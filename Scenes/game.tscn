@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dk2ca0ejtoc3j"]
+
+[ext_resource type="PackedScene" uid="uid://2gpd2eu08ife" path="res://Scenes/level.tscn" id="1_qoolv"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Viewport Container" type="SubViewportContainer" parent="."]
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 639.0
+offset_bottom = 359.0
+scale = Vector2(3, 3)
+
+[node name="Game Viewport" type="SubViewport" parent="Viewport Container"]
+handle_input_locally = false
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+
+[node name="Level" parent="Viewport Container/Game Viewport" instance=ExtResource("1_qoolv")]
