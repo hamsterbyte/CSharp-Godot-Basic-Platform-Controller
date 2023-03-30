@@ -1,45 +1,49 @@
 using Godot;
 using System;
 
-public partial class PlatformerController : CharacterBody2D{
-    #region PROCESS
+public partial class PlatformerController : CharacterBody2D
+{
+    
+    #region Process
 
     /// <summary>
-    /// Called every physics frame; default: 60fps
+    /// Called every physics update; default: 60fps
     /// </summary>
-    /// <param name="delta">Time passed since last physics frame</param>
+    /// <param name="delta"></param>
     public override void _PhysicsProcess(double delta){
         CalculateVelocity((float)delta);
         MoveAndSlide();
     }
-
     #endregion
+    
+    #region Gravity
 
-    #region GRAVITY
-
-    [Export]private float _gravity = 800f;
+    [Export] private float _gravity = 800f;
+    [Export] private float _terminalVelocity = 512f;
 
     /// <summary>
-    /// Apply gravity to the character body
+    /// Applies the gravity to the character body
     /// </summary>
     /// <param name="vel"></param>
     /// <param name="delta"></param>
     private void ApplyGravity(ref Vector2 vel, float delta){
+        if (IsOnFloor()) return;
         _previousVelocityY = vel.Y;
-        _newVelocityY += vel.Y + _gravity * delta;
-        vel.Y = (_previousVelocityY + _newVelocityY) * .5f;
+        _newVelocityY = vel.Y + _gravity * delta;
+        _newVelocityY = Mathf.Clamp(_newVelocityY, -Mathf.Inf, _terminalVelocity);
+        vel.Y = (_previousVelocityY + _newVelocityY) * 0.5f;
     }
 
     #endregion
-
-    #region VELOCITY
+    
+    #region Velocity
 
     private Vector2 _velocity;
     private float _previousVelocityY;
     private float _newVelocityY;
 
     /// <summary>
-    /// Calculate and apply bi-directional velocity to the character body
+    /// Calculate the bi-directional of the character body and apply it
     /// </summary>
     /// <param name="delta"></param>
     private void CalculateVelocity(float delta){
@@ -49,12 +53,14 @@ public partial class PlatformerController : CharacterBody2D{
     }
 
     /// <summary>
-    /// Calculate the vertical velocity of the character body
+    /// Calculates the Y velocity of the character body
     /// </summary>
     /// <param name="vel"></param>
     /// <param name="delta"></param>
     private void CalculateVelocityY(ref Vector2 vel, float delta){
         ApplyGravity(ref vel, delta);
     }
+
     #endregion
+
 }
