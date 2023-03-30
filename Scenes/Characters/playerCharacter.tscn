@@ -100,8 +100,6 @@ size = Vector2(15, 23)
 
 [node name="Character" type="CharacterBody2D"]
 texture_filter = 1
-script = SubResource("CSharpScript_a716c")
-_gravity = 400.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
