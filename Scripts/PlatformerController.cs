@@ -17,7 +17,7 @@ public partial class PlatformerController : CharacterBody2D{
 
     #region GRAVITY
 
-    private float _gravity = 800f;
+    [Export]private float _gravity = 800f;
 
     /// <summary>
     /// Apply gravity to the character body
@@ -25,7 +25,9 @@ public partial class PlatformerController : CharacterBody2D{
     /// <param name="vel"></param>
     /// <param name="delta"></param>
     private void ApplyGravity(ref Vector2 vel, float delta){
-        vel.Y += _gravity * delta;
+        _previousVelocityY = vel.Y;
+        _newVelocityY += vel.Y + _gravity * delta;
+        vel.Y = (_previousVelocityY + _newVelocityY) * .5f;
     }
 
     #endregion
@@ -33,6 +35,8 @@ public partial class PlatformerController : CharacterBody2D{
     #region VELOCITY
 
     private Vector2 _velocity;
+    private float _previousVelocityY;
+    private float _newVelocityY;
 
     /// <summary>
     /// Calculate and apply bi-directional velocity to the character body
