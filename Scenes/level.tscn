@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://2gpd2eu08ife"]
 
-[ext_resource type="PackedScene" uid="uid://du6tidh060d4l" path="res://Scenes/Characters/playerCharacter.tscn" id="1_i8emq"]
+[ext_resource type="PackedScene" uid="uid://c78dfodaexgas" path="res://Scenes/Characters/playerCharacter.tscn" id="1_i8emq"]
 [ext_resource type="Texture2D" uid="uid://cjvkta3vf1mfw" path="res://Assets/Sprites/Terrain (16x16).png" id="2_ua3ft"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_733xx"]
@@ -523,6 +523,7 @@ size = Vector2(640, 360)
 
 [node name="Character" parent="." instance=ExtResource("1_i8emq")]
 position = Vector2(320, 180)
+script = null
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_geksk")
