@@ -1,7 +1,14 @@
 [gd_scene load_steps=16 format=3 uid="uid://c78dfodaexgas"]
 
-[ext_resource type="Script" path="res://Scripts/CharacterController.cs" id="1_ocelw"]
 [ext_resource type="Texture2D" uid="uid://bekipyjljod8g" path="res://Assets/Sprites/Virtual Guy/Idle (32x32).png" id="1_xodld"]
+
+[sub_resource type="CSharpScript" id="CSharpScript_a716c"]
+script/source = "using Godot;
+using System;
+
+public partial class CharacterController : CharacterBody2D{
+
+}"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8djli"]
 atlas = ExtResource("1_xodld")
@@ -93,7 +100,7 @@ size = Vector2(15, 23)
 
 [node name="Character" type="CharacterBody2D"]
 texture_filter = 1
-script = ExtResource("1_ocelw")
+script = SubResource("CSharpScript_a716c")
 _gravity = 400.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
