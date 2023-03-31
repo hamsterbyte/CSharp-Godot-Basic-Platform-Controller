@@ -1,14 +1,38 @@
 using Godot;
 using System;
+using BasicPlatformController.Scripts;
 
 public partial class PlatformerController : CharacterBody2D
 {
     
     #region Process
+
+    /// <summary>
+    /// Called ever frame
+    /// </summary>
+    /// <param name="delta"></param>
+    public override void _Process(double delta){
+        GatherInput();
+    }
     
+    /// <summary>
+    /// Called every physics frame; default: 60fps
+    /// </summary>
+    /// <param name="delta"></param>
     public override void _PhysicsProcess(double delta){
         CalculateVelocity((float)delta);
         MoveAndSlide();
+    }
+    #endregion
+    
+    #region Input
+
+    private Vector2 _input;
+    //Cache input StringName's to prevent excessive calls to Godot API
+    private StringName _up = new StringName("Up"), _left = new StringName("Left"), _down = new StringName("Down"), _right = new StringName("Right");
+
+    private void GatherInput(){
+        _input = Input.GetVector(_left, _right, _up, _down).GetRaw();
     }
     #endregion
     
@@ -44,11 +68,21 @@ public partial class PlatformerController : CharacterBody2D
     private void CalculateVelocity(float delta){
         _velocity = Velocity;
         CalculateVelocityY(ref _velocity, delta);
+        CalculateVelocityX(ref _velocity);
         Velocity = _velocity;
     }
 
+    /// <summary>
+    /// Calculate vertical velocity of the character body
+    /// </summary>
+    /// <param name="vel"></param>
+    /// <param name="delta"></param>
     private void CalculateVelocityY(ref Vector2 vel, float delta){
         ApplyGravity(ref vel, delta);
+    }
+
+    private void CalculateVelocityX(ref Vector2 vel){
+        vel.X = _input.X * 100;
     }
 
     #endregion
