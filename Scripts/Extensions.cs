@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using Godot;
-
-namespace BasicPlatformController.Scripts;
+﻿using Godot;
 
 public static class Extensions{
     public static Vector2 GetRaw(this Vector2 vector){
