@@ -43,7 +43,7 @@ public partial class PlatformerController : CharacterBody2D{
     }
 
     #endregion
-    
+
     #region Interpolation
 
     private Vector2 _spriteOffset;
@@ -63,28 +63,22 @@ public partial class PlatformerController : CharacterBody2D{
         _sprite.GlobalPosition = _sprite.GlobalPosition.Lerp(GlobalPosition + _spriteOffset,
             (float)Engine.GetPhysicsInterpolationFraction());
     }
+
     #endregion
-    
+
     #region Input
 
     [Export] private bool _useRawInput = true;
     private Vector2 _input;
     private bool _didJump;
 
-    //Cache input StringName's to prevent excessive calls to Godot API
-    private StringName _up = new StringName("Up"),
-        _left = new StringName("Left"),
-        _down = new StringName("Down"),
-        _right = new StringName("Right"),
-        _jump = new StringName("Jump");
-
     /// <summary>
     /// Gather all required input from the player
     /// </summary>
     private void GatherInput(){
-        _input = Input.GetVector(_left, _right, _up, _down);
+        _input = Input.GetVector(InputNames.Left, InputNames.Right, InputNames.Up, InputNames.Down);
         if (_useRawInput) _input = _input.GetRaw();
-        if (Input.IsActionJustPressed(_jump)){
+        if (Input.IsActionJustPressed(InputNames.Jump)){
             _didJump = true;
         }
     }
@@ -108,7 +102,6 @@ public partial class PlatformerController : CharacterBody2D{
         _newVelocityY = Mathf.Clamp(_newVelocityY, -Mathf.Inf, _terminalVelocity);
         vel.Y = (_previousVelocityY + _newVelocityY) * .5f;
     }
-    
 
     #endregion
 
@@ -154,9 +147,10 @@ public partial class PlatformerController : CharacterBody2D{
     }
 
     #endregion
-    
+
     #region Jump
-    [Export]private float _jumpVelocity = -300f;
+
+    [Export] private float _jumpVelocity = -300f;
 
     /// <summary>
     /// Apply jump force to the character velocity
@@ -166,6 +160,7 @@ public partial class PlatformerController : CharacterBody2D{
         _didJump = false;
         vel.Y = _jumpVelocity;
     }
+
     #endregion
 
     #region Animation
@@ -184,4 +179,5 @@ public partial class PlatformerController : CharacterBody2D{
     }
 
     #endregion
+    
 }
