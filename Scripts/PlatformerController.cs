@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class PlatformerController : CharacterBody2D{
@@ -8,6 +9,7 @@ public partial class PlatformerController : CharacterBody2D{
     /// </summary>
     public override void _Ready(){
         GatherRequirements();
+        SetupSprite();
     }
 
     /// <summary>
@@ -28,6 +30,7 @@ public partial class PlatformerController : CharacterBody2D{
     public override void _Process(double delta){
         GatherInput();
         FlipSprite();
+        InterpolateSprite();
     }
 
     /// <summary>
@@ -40,21 +43,50 @@ public partial class PlatformerController : CharacterBody2D{
     }
 
     #endregion
+    
+    #region Interpolation
 
+    private Vector2 _spriteOffset;
+
+    /// <summary>
+    /// Set the sprite offset based on relative anchor position
+    /// </summary>
+    private void SetupSprite(){
+        _sprite.TopLevel = false;
+        _spriteOffset = 16 * Vector2.Up;
+    }
+
+    /// <summary>
+    /// Interpolate sprite position based on character body position
+    /// </summary>
+    private void InterpolateSprite(){
+        _sprite.GlobalPosition = _sprite.GlobalPosition.Lerp(GlobalPosition + _spriteOffset,
+            (float)Engine.GetPhysicsInterpolationFraction());
+    }
+    #endregion
+    
     #region Input
 
     [Export] private bool _useRawInput = true;
     private Vector2 _input;
+    private bool _didJump;
 
     //Cache input StringName's to prevent excessive calls to Godot API
     private StringName _up = new StringName("Up"),
         _left = new StringName("Left"),
         _down = new StringName("Down"),
-        _right = new StringName("Right");
+        _right = new StringName("Right"),
+        _jump = new StringName("Jump");
 
+    /// <summary>
+    /// Gather all required input from the player
+    /// </summary>
     private void GatherInput(){
         _input = Input.GetVector(_left, _right, _up, _down);
         if (_useRawInput) _input = _input.GetRaw();
+        if (Input.IsActionJustPressed(_jump)){
+            _didJump = true;
+        }
     }
 
     #endregion
@@ -76,12 +108,13 @@ public partial class PlatformerController : CharacterBody2D{
         _newVelocityY = Mathf.Clamp(_newVelocityY, -Mathf.Inf, _terminalVelocity);
         vel.Y = (_previousVelocityY + _newVelocityY) * .5f;
     }
+    
 
     #endregion
 
     #region Velocity
 
-    [Export] private float _moveSpeed = 100f;
+    [Export] private float _moveSpeed = 200f;
     [Export] private float _acceleration = 7f;
     [Export] private float _deceleration = 10f;
 
@@ -106,6 +139,7 @@ public partial class PlatformerController : CharacterBody2D{
     /// <param name="vel"></param>
     /// <param name="delta"></param>
     private void CalculateVelocityY(ref Vector2 vel, float delta){
+        HandleJump(ref vel);
         ApplyGravity(ref vel, delta);
     }
 
@@ -119,6 +153,19 @@ public partial class PlatformerController : CharacterBody2D{
             Mathf.Sign(_input.X) == Mathf.Sign(_velocity.X) ? _acceleration : _deceleration);
     }
 
+    #endregion
+    
+    #region Jump
+    [Export]private float _jumpVelocity = -300f;
+
+    /// <summary>
+    /// Apply jump force to the character velocity
+    /// </summary>
+    private void HandleJump(ref Vector2 vel){
+        if (!IsOnFloor() || !_didJump) return;
+        _didJump = false;
+        vel.Y = _jumpVelocity;
+    }
     #endregion
 
     #region Animation

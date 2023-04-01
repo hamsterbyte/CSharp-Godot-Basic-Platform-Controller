@@ -525,6 +525,8 @@ size = Vector2(640, 360)
 [node name="Character" parent="." instance=ExtResource("1_i8emq")]
 position = Vector2(320, 180)
 script = ExtResource("2_dgy1r")
+_gravity = 1600.0
+_terminalVelocity = 800.0
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_geksk")
